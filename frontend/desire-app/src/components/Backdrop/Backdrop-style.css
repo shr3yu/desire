@@ -1,0 +1,56 @@
+.collage-background {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  opacity:0.9;
+}
+
+.collage-item {
+  background-size: cover;
+  background-position: center;
+  height: calc(100vh / 2);
+}
+
+.item1 {
+  background-image: url('Backdrop-images/bag.JPG');
+}
+
+.item2 {
+  background-image: url('Backdrop-images/heels.JPG');
+}
+
+.item3 {
+  background-image: url('Backdrop-images/jewelry.JPG');
+}
+
+.item4 {
+  background-image: url('Backdrop-images/makeup.JPG');
+}
+
+.item5 {
+  background-image: url('Backdrop-images/perfume.JPG');
+}
+
+.item6 {
+  background-image: url('Backdrop-images/shirt.JPG');
+}
+
+.item7 {
+  background-image: url('Backdrop-images/shoppingbags.JPG');
+}
+
+.item8 {
+  background-image: url('Backdrop-images/Sunglasses.JPG');
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .collage-background {
+    grid-template-columns: repeat(4, 1fr); /* 4 columns on larger screens */
+  }
+}
