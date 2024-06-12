@@ -17,4 +17,10 @@
   .submit-button {
     @apply w-full text-sm bg-primary rounded my-1 p-2 text-white;
   }
+  .icon-button{
+    @apply p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100
+  }
+  .icon-btn{
+    @apply text-xl text-slate-300 cursor-pointer hover:text-primary
+  }
 }
