@@ -3,6 +3,7 @@ import { GoSignOut } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import Profile from "./Sidebar-Elements/Profile";
 import List from "./List/List"
+import AddList from "./List/AddList";
 
 const Sidebar = ({ expanded, toggleSidebar }) => {
     
@@ -23,7 +24,7 @@ const Sidebar = ({ expanded, toggleSidebar }) => {
         </div>
 
         <List expanded={expanded}/>
-
+        <AddList expanded={expanded}/>
         <div className="border-t flex justify-center items-center p-4 space-x-3 mt-auto">
           {expanded ? <Profile/>: null}
           <button
