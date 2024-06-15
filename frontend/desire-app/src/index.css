@@ -26,4 +26,10 @@
   .input-label{
     @apply text-xs text-slate-400
   }
+  .scroll-input{
+    @apply no-scrollbar whitespace-nowrap hover:overflow-x-scroll
+  }
+  .no-hover-scroll{
+    @apply no-scrollbar whitespace-nowrap overflow-x-scroll
+  }
 }

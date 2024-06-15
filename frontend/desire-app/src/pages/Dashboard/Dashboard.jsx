@@ -31,7 +31,7 @@ export const Dashboard = () => {
           <div className="container mx-auto pt-10">
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <ItemCard
-                itemName="Nails"
+                itemName="I want to get my nails done"
                 image={bag}
                 description="A treat?"
                 amount="80"
@@ -55,7 +55,7 @@ export const Dashboard = () => {
           </div>
 
           <button
-            className="w-16 h-16 flex items-center justify-center rounded-full bg-primary hover:bg-secondary absolute right-10 bottom-10"
+            className="w-16 h-16 flex items-center justify-center rounded-full bg-primary hover:bg-secondary fixed right-10 bottom-10"
             onClick={() => {
               setOpenEditItemModal({ isShown: true, type: "add", data: null });
             }}
@@ -69,26 +69,36 @@ export const Dashboard = () => {
             style={{
               overlay: {
                 backgroundColor: "rgba(0, 0, 0, 0.2)",
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               },
               content: {
-                position: 'relative',
-                inset: 'auto',
-                width: '70%',
-                maxWidth: '500px',
-                height: 'auto',
-                maxHeight: '80%',
-                background: 'white',
-                overflow: 'auto',
-                margin: 'auto'
-              }
+                position: "relative",
+                inset: "auto",
+                width: "70%",
+                maxWidth: "500px",
+                height: "auto",
+                maxHeight: "80%",
+                background: "white",
+                overflow: "auto",
+                margin: "auto",
+              },
             }}
             contentLabel="Edit Item Modal"
             className="w-full max-w-3xl h-auto max-h-[50%] bg-white rounded-md overflow-auto mx-2 sm:mx-auto mt-0 sm:mt-14"
           >
-            <ItemEditPopup type={openEditItemPopupModal.type} itemData={openEditItemPopupModal.data} onClose={()=> setOpenEditItemModal({isShown: false, type: "add", data:null})}/>
+            <ItemEditPopup
+              type={openEditItemPopupModal.type}
+              itemData={openEditItemPopupModal.data}
+              onClose={() =>
+                setOpenEditItemModal({
+                  isShown: false,
+                  type: "add",
+                  data: null,
+                })
+              }
+            />
           </Modal>
         </div>
       </div>

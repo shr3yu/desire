@@ -44,12 +44,15 @@ const Login = () => {
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
+              onClick={()=> {setError("")}}
             />
             <PasswordInput
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
+              onClick={()=> {setError("")}}
+              
             ></PasswordInput>
 
             {error && <p className="text-red-500 text-xs pb-1">{error}</p>}

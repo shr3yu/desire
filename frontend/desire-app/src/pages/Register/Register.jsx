@@ -46,6 +46,7 @@ const Register = () => {
               onChange={(e) => {
                 setName(e.target.value);
               }}
+              onClick={()=> {setError("")}}
             />
             <input
               type="text"
@@ -55,12 +56,14 @@ const Register = () => {
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
+              onClick={()=> {setError("")}}
             />
             <PasswordInput
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
+              onClick={()=> {setError("")}}
             ></PasswordInput>
 
             <button type="submit" className="submit-button">
