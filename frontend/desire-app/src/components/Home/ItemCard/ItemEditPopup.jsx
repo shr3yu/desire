@@ -1,19 +1,70 @@
 import React, { useState } from "react";
 import { VscClose } from "react-icons/vsc";
+import axiosInstance from "../../../utils/axiosInstancs";
 
-const ItemEditPopup = ({ itemData, type, onClose }) => {
-  const [item, setItem] = useState("");
-  const [discription, setDiscription] = useState("");
-  const [amount, setAmount] = useState("");
+const ItemEditPopup = ({
+  itemData,
+  type,
+  onClose,
+  list,
+  getAllActiveItems,
+}) => {
+  const [item, setItem] = useState(itemData?.itemName || "");
+  const [description, setDescription] = useState(itemData?.description || "");
+  const [amount, setAmount] = useState(itemData?.amount || "");
 
   const [error, setError] = useState("");
 
   //Add new item
-  const addNewItem= async ()=> {};
-  //Edit item
-  const editItem= async()=>{}
+  const addNewItem = async (list) => {
+    try {
+      const response = await axiosInstance.post(`/add-item/${list._id}`, {
+        itemName: item,
+        description: description,
+        amount: amount,
+      });
 
-  
+      if (response.data && response.data.item) {
+        //renders the page
+        await getAllActiveItems(list._id);
+        onClose();
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setError(error.response.data.message);
+      }
+    }
+  };
+
+  //Edit item
+  const editItem = async () => {
+    try {
+      const response = await axiosInstance.put(`/edit-item/${itemData?._id}`, {
+        itemName: item,
+        description: description,
+        amount: amount,
+      });
+
+      if (response.data && response.data.item) {
+        //renders the page
+        await getAllActiveItems(list._id);
+        onClose();
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setError(error.response.data.message);
+      }
+    }
+  };
+
   const handleAddItem = () => {
     if (!item) {
       setError("Please enter an item name ");
@@ -25,14 +76,12 @@ const ItemEditPopup = ({ itemData, type, onClose }) => {
 
     setError("");
 
-    if(type === "edit"){
-        editItem();
-    }else{
-        addNewItem();
+    if (type === "edit") {
+      editItem();
+    } else {
+      addNewItem(list);
     }
   };
-
-  
 
   return (
     <div className="p-6 w-full bg-white rounded-lg shadow-md ">
@@ -62,8 +111,8 @@ const ItemEditPopup = ({ itemData, type, onClose }) => {
           type="text"
           className="text-sm text-slate-950 bg-slate-50 p-2 outline-none"
           rows={5}
-          value={discription}
-          onChange={({ target }) => setDiscription(target.value)}
+          value={description}
+          onChange={({ target }) => setDescription(target.value)}
         ></textarea>
       </div>
 
@@ -85,7 +134,7 @@ const ItemEditPopup = ({ itemData, type, onClose }) => {
         className="w-full bg-primary text-white font-medium rounded-lg py-3 mt-5"
         onClick={handleAddItem}
       >
-        ADD
+        {type === "edit" ? "SAVE" : "ADD"}
       </button>
     </div>
   );

@@ -20,7 +20,7 @@ const ListItem = ({
     <div
       className={`relative flex items-center py-2 px-3 my-1
         font-medium cursor-pointer justify-center
-        transition-colours ${active ? "bg-gray-400" : "hover:bg-gray-100"}`}
+        transition-colours ${active ? "bg-secondary" : "hover:bg-gray-100"}`}
       onClick={() => {
         onChange(list);
       }}
@@ -32,9 +32,9 @@ const ListItem = ({
 
       {expanded && hoverState ? (
         <div className="flex flex-row md:flex-row items-center gap-1 ml-auto">
-          <MdCreate className="icon-btn" onClick={onEdit} />
+          <MdCreate className="icon-btn text-black" onClick={onEdit} />
           <MdDelete
-            className="icon-btn"
+            className="icon-btn text-black"
             onClick={(e) => {
               e.stopPropagation();
               onDelete(list);

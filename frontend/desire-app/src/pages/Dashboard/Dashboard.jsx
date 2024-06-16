@@ -17,6 +17,11 @@ export const Dashboard = () => {
   });
   const navigate = useNavigate();
 
+  //to edit item card
+  const handleEdit = (item) => {
+    setOpenEditItemModal({isShown: true, data: item, type: "edit"})
+  }
+
   //get user info
   const [userInfo, setUserInfo] = useState(null);
 
@@ -124,7 +129,7 @@ export const Dashboard = () => {
                   amount={item.amount}
                   isPinned={item.isPinned}
                   onDelete={() => {}}
-                  onEdit={() => {}}
+                  onEdit={() => handleEdit(item)}
                   onPinNote={() => {}}
                 />
               ))}
@@ -175,6 +180,8 @@ export const Dashboard = () => {
                   data: null,
                 })
               }
+              list = {selectedList}
+              getAllActiveItems = {getAllActiveItems}
             />
           </Modal>
         </div>
