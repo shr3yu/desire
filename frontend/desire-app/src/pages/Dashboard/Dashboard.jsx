@@ -19,8 +19,32 @@ export const Dashboard = () => {
 
   //to edit item card
   const handleEdit = (item) => {
-    setOpenEditItemModal({isShown: true, data: item, type: "edit"})
-  }
+    setOpenEditItemModal({ isShown: true, data: item, type: "edit" });
+  };
+
+  //to delete item card
+  const deleteItemCard = async (item) => {
+    try {
+      const response = await axiosInstance.delete(`/delete-item/${item?._id}`);
+      getAllActiveItems(selectedList?._id);
+    } catch (error) {
+      if (error.response && error.response.data && error.reponse.data.message) {
+        console.log(error.response.data.message);
+      }
+    }
+  };
+
+  //to pin item card
+  const updatePinned = async (item) => {
+    try {
+      const response = await axiosInstance.put(`/pin-item/${item?._id}`, {
+        "isPinned": false,
+      });
+      getAllActiveItems(selectedList?._id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   //get user info
   const [userInfo, setUserInfo] = useState(null);
@@ -107,7 +131,7 @@ export const Dashboard = () => {
         allLists={allLists}
         setAllLists={setAllLists}
         activeList={selectedList}
-        changeSelectedList = {changeSelectedList}
+        changeSelectedList={changeSelectedList}
       />
       <div
         className={`flex-grow p-4 transition-all duration-100 ${
@@ -128,9 +152,9 @@ export const Dashboard = () => {
                   description={item.description}
                   amount={item.amount}
                   isPinned={item.isPinned}
-                  onDelete={() => {}}
+                  onDelete={() => deleteItemCard(item)}
                   onEdit={() => handleEdit(item)}
-                  onPinNote={() => {}}
+                  onPinNote={() => updatePinned(item)}
                 />
               ))}
             </div>
@@ -180,8 +204,8 @@ export const Dashboard = () => {
                   data: null,
                 })
               }
-              list = {selectedList}
-              getAllActiveItems = {getAllActiveItems}
+              list={selectedList}
+              getAllActiveItems={getAllActiveItems}
             />
           </Modal>
         </div>

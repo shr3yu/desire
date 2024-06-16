@@ -20,7 +20,7 @@ const ItemCard = ({
         <div className="text-xl font-semibold no-hover-scroll">${amount}</div>
       </div>
       <div className="flex flex-row md:flex-col items-center gap-2 ml-auto pl-3 pt-6">
-        <MdOutlinePushPin className="icon-btn" onClick={onPinNote} />
+        <MdOutlinePushPin className= {`icon-btn ${isPinned ? 'text-primary' : ''}`} onClick={onPinNote} />
         <MdCreate className="icon-btn" onClick={onEdit} />
         <MdDelete className="icon-btn" onClick={onDelete} />
       </div>

@@ -432,7 +432,7 @@ app.put("/pin-item/:itemId", authenticateToken, async (req, res) => {
       return res.status(400).json({ error: true, message: "Item not found" });
     }
 
-    if (isPinned) item.isPinned = isPinned || false;
+    item.isPinned = isPinned;
 
     await item.save();
 
