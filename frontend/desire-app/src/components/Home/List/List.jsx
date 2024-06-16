@@ -13,11 +13,11 @@ const List = ({ expanded, allLists, onChange, activeList}) => {
       {allLists.map((list) => (
         <ListItem
           key= {list?._id}
-          listId={list?._id}
+          list={list}
           icon={clothes}
           name={list.listName}
           expanded={expanded}
-          active= {list?._id === activeList}
+          active= {list?._id == activeList?._id}
           onChange = {onChange}
         />
       ))}

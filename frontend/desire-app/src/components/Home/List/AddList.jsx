@@ -16,6 +16,8 @@ const AddList = ({ expanded }) => {
       return;
     }
 
+    //API call to add list
+
     setList("");
     setError("");
     setText(false);

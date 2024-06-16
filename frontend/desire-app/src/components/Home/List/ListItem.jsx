@@ -1,6 +1,6 @@
 import React from "react";
 
-const ListItem = ({ listId, icon, name, active, expanded, onChange }) => {
+const ListItem = ({ list, icon, name, active, expanded, onChange }) => {
   return (
     <div
       className={`relative flex items-center py-2 px-3 my-1
@@ -8,7 +8,7 @@ const ListItem = ({ listId, icon, name, active, expanded, onChange }) => {
         transition-colours ${active ? "bg-primary" : "hover:bg-gray-100"}`}
       onClick={() => {
         console.log("Changed")
-        onChange(listId);
+        onChange(list);
       }}
     >
       <img src={icon} className="w-12 h-12 flex-shrink-0 rounded-lg" />

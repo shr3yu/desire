@@ -36,12 +36,14 @@ export const Dashboard = () => {
 
   //get all lists
   const [allLists, setAllLists] = useState([]);
+  
   const getAllLists = async () => {
     try {
       const response = await axiosInstance.get("/get-lists");
 
       if (response.data && response.data.lists) {
         setAllLists(response.data.lists);
+        setSelectedList(response.data.lists[0]);//inital active list is the first one recieved
       }
     } catch (error) {
       console.log(`An unexpected error has occured: ${error}`);
@@ -51,14 +53,13 @@ export const Dashboard = () => {
   //Keeping track of the selected/active list by id
   const [selectedList, setSelectedList] = useState(null);
 
-  const changeSelectedList = (listId) => {
-    setSelectedList(listId);
+  const changeSelectedList = (list) => {
+    setSelectedList(list);
   };
 
   //Happens before rendering of the page
   useEffect(() => {
     getAllLists();
-    setSelectedList(allLists[0]?._id); // on inital load: first list is active
     getUserInfo();
     return () => {};
   }, []);
@@ -83,7 +84,9 @@ export const Dashboard = () => {
         }`}
       >
         <div className="py-8 px-7">
-          <h1 className="text-4xl pd-30 tracking-tight"> Active List Name</h1>
+          <h1 className="text-4xl pd-30 tracking-tight">
+            {selectedList?.listName}
+          </h1>
           <div className="container mx-auto pt-10">
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <ItemCard
