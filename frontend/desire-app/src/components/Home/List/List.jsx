@@ -7,7 +7,7 @@ import love from "./List-icons/love.JPG";
 import makeup from "./List-icons/makeup.JPG";
 import travel from "./List-icons/travel.JPG";
 
-const List = ({ expanded, allLists, onChange, activeList}) => {
+const List = ({ expanded, allLists, onChange, activeList, onDelete}) => {
   return (
     <div className="space-y-2 mt-4">
       {allLists.map((list) => (
@@ -19,6 +19,7 @@ const List = ({ expanded, allLists, onChange, activeList}) => {
           expanded={expanded}
           active= {list?._id == activeList?._id}
           onChange = {onChange}
+          onDelete = {onDelete}
         />
       ))}
     </div>

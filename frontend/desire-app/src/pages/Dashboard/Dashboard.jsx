@@ -102,6 +102,7 @@ export const Dashboard = () => {
         allLists={allLists}
         setAllLists={setAllLists}
         activeList={selectedList}
+        changeSelectedList = {changeSelectedList}
       />
       <div
         className={`flex-grow p-4 transition-all duration-100 ${
