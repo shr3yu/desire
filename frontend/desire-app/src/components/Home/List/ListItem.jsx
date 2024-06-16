@@ -1,6 +1,6 @@
 import React from "react";
 
-const ListItem = ({ icon, name, active, expanded }) => {
+const ListItem = ({icon, name, active, expanded }) => {
   return (
     <div
       className={`realative flex items-center py-2 px-3 my-1

@@ -18,29 +18,42 @@ export const Dashboard = () => {
   const navigate = useNavigate();
 
   //get user info
-  const [userInfo, setUserInfo]= useState(null)
+  const [userInfo, setUserInfo] = useState(null);
 
   const getUserInfo = async () => {
-    try{
+    try {
       const response = await axiosInstance.get("/get-user");
-      if (response.data && response.data.user){
-        setUserInfo(response.data.user)
+      if (response.data && response.data.user) {
+        setUserInfo(response.data.user);
       }
-    }catch(error){
-      if(error.response.status == 401){
+    } catch (error) {
+      if (error.response.status == 401) {
         localStorage.clear();
         navigate("/login");
       }
     }
-  }
+  };
 
-  useEffect(()=>{
+  //get all lists
+  const [allLists, setAllLists] = useState([]);
+  const getAllLists = async () => {
+    try {
+      const response = await axiosInstance.get("/get-lists");
 
-    getUserInfo();
-    return () => {
-
+      if (response.data && response.data.lists) {
+        setAllLists(response.data.lists);
+      }
+    } catch (error) {
+      console.log(`An unexpected error has occured: ${error}`);
     }
-  },[])
+  };
+
+  //Happens before rendering of the page
+  useEffect(() => {
+    getAllLists();
+    getUserInfo();
+    return () => {};
+  }, []);
 
   const toggleSidebar = () => {
     setExpanded(!expanded);
@@ -48,7 +61,12 @@ export const Dashboard = () => {
 
   return (
     <>
-      <Sidebar expanded={expanded} toggleSidebar={toggleSidebar} userInfo={userInfo}/>
+      <Sidebar
+        expanded={expanded}
+        toggleSidebar={toggleSidebar}
+        userInfo={userInfo}
+        allLists={allLists}
+      />
       <div
         className={`flex-grow p-4 transition-all duration-100 ${
           expanded ? "ml-64" : "ml-20"
