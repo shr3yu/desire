@@ -44,6 +44,7 @@ export const Dashboard = () => {
       if (response.data && response.data.lists) {
         setAllLists(response.data.lists);
         setSelectedList(response.data.lists[0]); //inital active list is the first one recieved
+        return response.data.lists;
       }
     } catch (error) {
       console.log(`An unexpected error has occured: ${error}`);
@@ -55,13 +56,36 @@ export const Dashboard = () => {
 
   const changeSelectedList = (list) => {
     setSelectedList(list);
+    getAllActiveItems(list._id);
+  };
+
+  //get all active items
+  const [allActiveItems, setAllActiveItems] = useState(null);
+
+  const getAllActiveItems = async (listId) => {
+    try {
+      const response = await axiosInstance.get(`/get-items-in-list/${listId}`);
+
+      if (response.data && response.data.items) {
+        setAllActiveItems(response.data.items);
+      }
+    } catch (error) {
+      console.log(`An unexpected error has occured: ${error}`);
+    }
   };
 
   //Happens before rendering of the page
   useEffect(() => {
-    getAllLists();
-    getUserInfo();
-    return () => {};
+    const fetchData = async () => {
+      const lists = await getAllLists();
+      const firstListId = lists[0]?._id;
+      if (firstListId) {
+        await getAllActiveItems(firstListId);
+      }
+      getUserInfo();
+    };
+
+    fetchData();
   }, []);
 
   const toggleSidebar = () => {
@@ -90,27 +114,19 @@ export const Dashboard = () => {
           </h1>
           <div className="container mx-auto pt-10">
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <ItemCard
-                itemName="I want to get my nails done"
-                image={bag}
-                description="A treat?"
-                amount="80"
-                isPinned={true}
-                onDelete={() => {}}
-                onEdit={() => {}}
-                onPinNote={() => {}}
-              />
-
-              <ItemCard
-                itemName="purse"
-                image={bag}
-                description="Maybe for a birthday present??"
-                amount="22"
-                isPinned={true}
-                onDelete={() => {}}
-                onEdit={() => {}}
-                onPinNote={() => {}}
-              />
+              {allActiveItems?.map((item) => (
+                <ItemCard
+                  key={item._id}
+                  itemName={item.itemName}
+                  image={bag}
+                  description={item.description}
+                  amount={item.amount}
+                  isPinned={item.isPinned}
+                  onDelete={() => {}}
+                  onEdit={() => {}}
+                  onPinNote={() => {}}
+                />
+              ))}
             </div>
           </div>
 
