@@ -36,21 +36,21 @@ export const Dashboard = () => {
 
   //get all lists
   const [allLists, setAllLists] = useState([]);
-  
+
   const getAllLists = async () => {
     try {
       const response = await axiosInstance.get("/get-lists");
 
       if (response.data && response.data.lists) {
         setAllLists(response.data.lists);
-        setSelectedList(response.data.lists[0]);//inital active list is the first one recieved
+        setSelectedList(response.data.lists[0]); //inital active list is the first one recieved
       }
     } catch (error) {
       console.log(`An unexpected error has occured: ${error}`);
     }
   };
 
-  //Keeping track of the selected/active list by id
+  //Keeping track of the selected/active list
   const [selectedList, setSelectedList] = useState(null);
 
   const changeSelectedList = (list) => {
@@ -76,6 +76,7 @@ export const Dashboard = () => {
         onChange={changeSelectedList}
         userInfo={userInfo}
         allLists={allLists}
+        setAllLists={setAllLists}
         activeList={selectedList}
       />
       <div

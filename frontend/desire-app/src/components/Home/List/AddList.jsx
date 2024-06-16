@@ -2,25 +2,44 @@ import React, { useState } from "react";
 import { VscDiffAdded } from "react-icons/vsc";
 import { ImCheckmark2 } from "react-icons/im";
 import { VscClose } from "react-icons/vsc";
+import axiosInstance from "../../../utils/axiosInstancs";
 
-const AddList = ({ expanded }) => {
+const AddList = ({ expanded, allLists, setAllLists }) => {
   // text: if text input should be displayed or not
   const [text, setText] = useState(false);
   // list: value of list name
   const [list, setList] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!list) {
       setError("Enter a list name");
       return;
     }
 
     //API call to add list
+    try {
+      const response = await axiosInstance.post("/add-list", {
+        listName: list,
+      });
 
-    setList("");
-    setError("");
-    setText(false);
+      if (response.data && response.data.list) {
+        setAllLists([...allLists, response.data.list]); //adds to list, so page can render 
+        setList("");
+        setError("");
+        setText(false);
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setError(error.response.data.message);
+      } else {
+        setError("An unexpected error occured");
+      }
+    }
   };
 
   return (
