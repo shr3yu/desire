@@ -5,10 +5,10 @@ const Schema = mongoose.Schema;
 
 const itemSchema = new Schema({
   itemName: { type: String, required: true },
-  list: { type: String, required: true },
   description: { type: String },
   amount: { type: String, required: true },
   isPinned: { type: Boolean, default: false },
+  listId: { type: String, required: true },
   userId: { type: String, required: true },
   createdOn: { type: Date, default: new Date().getTime() },
 });

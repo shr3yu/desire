@@ -1,17 +1,19 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PasswordInput from "../../components/PasswordInput";
 import Backdrop from "../../components/Backdrop/Backdrop";
 import { validateEmail } from "../../utils/helper";
+import axiosInstance from "../../utils/axiosInstancs";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
+  const navigate = useNavigate();
+
   const handleLogin = async (e) => {
     e.preventDefault();
-
 
     if (!validateEmail(email)) {
       setError("Please enter a valid email adress.");
@@ -24,7 +26,30 @@ const Login = () => {
     }
     setError("");
 
-    //SignUp API call
+    //Login API call
+    try {
+      const response = await axiosInstance.post("/login", {
+        email: email,
+        password: password,
+      });
+
+      //handle successful login response
+      if (response.data && response.data.accessToken) {
+        localStorage.setItem("token", response.data.accessToken);
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      //handle login error
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setError(error.response.data.message);
+      } else {
+        setError("An unexpected error occured.");
+      }
+    }
   };
 
   return (
@@ -44,15 +69,18 @@ const Login = () => {
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
-              onClick={()=> {setError("")}}
+              onClick={() => {
+                setError("");
+              }}
             />
             <PasswordInput
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
-              onClick={()=> {setError("")}}
-              
+              onClick={() => {
+                setError("");
+              }}
             ></PasswordInput>
 
             {error && <p className="text-red-500 text-xs pb-1">{error}</p>}

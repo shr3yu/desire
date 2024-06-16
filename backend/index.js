@@ -130,6 +130,25 @@ app.get("/get-user", authenticateToken, async (req, res) => {
   });
 });
 
+//delete account
+app.delete("/delete-account", authenticateToken, async (req, res) => {
+  const { user } = req.user;
+  try {
+    //first delete all lists
+    await List.deleteMany({ userId: user._id });
+    await Item.deleteMany({ userId: user._id });
+    return res.json({
+      error: false,
+      message: "User has been deleted, including any user data",
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: true,
+      message: `internal error ${error}`,
+    });
+  }
+});
+
 /*
 All commands relating to List 
 */
@@ -162,6 +181,25 @@ app.post("/add-list", authenticateToken, async (req, res) => {
     return res.status(500).json({
       error: true,
       message: `internal error ${error}`,
+    });
+  }
+});
+
+//get all list items
+app.get("/get-lists", authenticateToken, async (req, res) => {
+  const { user } = req.user;
+  try {
+    const lists = await List.find({ userId: user._id });
+
+    return res.json({
+      error: false,
+      lists,
+      message: "All lists successfully sent",
+    });
+  } catch (error) {
+    return res.json({
+      error: true,
+      message: `Internal error ${errors}`,
     });
   }
 });
@@ -215,7 +253,10 @@ app.delete("/delete-list/:listId", authenticateToken, async (req, res) => {
       return res.status(400).json({ error: true, message: "list not found" });
     }
 
+    //Delete the list
     await List.deleteOne({ _id: listId, userId: user._id });
+    //Delete all items in the list
+    await Item.deleteMany({ listId: listId });
 
     return res.json({ error: false, message: "list deleted sucessfully" });
   } catch (error) {
@@ -228,8 +269,9 @@ All commands relating to Items
 */
 
 //add item
-app.post("/add-item", authenticateToken, async (req, res) => {
-  const { itemName, list, description, amount } = req.body;
+app.post("/add-item/:listId", authenticateToken, async (req, res) => {
+  const listId = req.params.listId;
+  const { itemName, description, amount } = req.body;
   const { user } = req.user;
 
   if (!itemName) {
@@ -238,20 +280,31 @@ app.post("/add-item", authenticateToken, async (req, res) => {
       .json({ error: true, message: "Item name is required" });
   }
 
-  if (!list) {
-    return res.status(400).json({ error: true, message: "List is required" });
-  }
-
   if (!amount) {
     return res.status(400).json({ error: true, message: "Amount is required" });
   }
 
   try {
+    //case1: random input
+    if (!mongoose.Types.ObjectId.isValid(listId)) {
+      return res.status(400).json({ error: true, message: "Invalid list ID" });
+    }
+
+    //case2: invalid object input
+    const list = await List.findOne({ _id: listId, userId: user._id });
+
+    if (!list) {
+      return res
+        .status(400)
+        .json({ error: true, message: "List was not found" });
+    }
+
+    //case3: valid input
     const item = new Item({
       itemName,
-      list,
       description,
       amount,
+      listId: listId,
       userId: user._id,
     });
 
@@ -310,26 +363,34 @@ app.put("/edit-item/:itemId", authenticateToken, async (req, res) => {
 });
 
 //get items in specifc list
-app.get("/get-items-in-list/:listName", authenticateToken, async (req, res) => {
+app.get("/get-items-in-list/:listId", authenticateToken, async (req, res) => {
   const { user } = req.user;
-  const listName = req.params.listName;
+  const listId = req.params.listId;
 
-  if (!listName) {
-    return res.status(400).json({
-      error: true,
-      message: "Invalid list Name",
-    });
+  //Check if listId is a valid object, and not a random string
+  if (!mongoose.Types.ObjectId.isValid(listId)) {
+    return res.status(400).json({ error: true, message: "Invalid list ID" });
   }
 
   try {
-    const items = await Item.find({ userId: user._id, list: listName }).sort({
+    // Check if the list exists
+    const list = await List.findOne({ _id: listId, userId: user._id });
+
+    if (!list) {
+      return res
+        .status(400)
+        .json({ error: true, message: "List was not found" });
+    }
+
+    //Get all items in list
+    const items = await Item.find({ userId: user._id, listId: listId }).sort({
       isPinned: -1,
     });
 
     return res.json({
       error: false,
       items,
-      message: `All notes in list: ${listName}`,
+      message: `Items successfully sent`,
     });
   } catch (error) {
     return res.json({
@@ -356,6 +417,35 @@ app.delete("/delete-item/:itemId", authenticateToken, async (req, res) => {
     return res.json({ error: false, message: "item deleted sucessfully" });
   } catch (error) {
     res.status(500).json({ error: true, message: `internal error ${error}` });
+  }
+});
+
+//pin item
+app.put("/pin-item/:itemId", authenticateToken, async (req, res) => {
+  const itemId = req.params.itemId;
+  const { user } = req.user;
+  const { isPinned } = req.body;
+
+  try {
+    const item = await Item.findOne({ _id: itemId, userId: user._id });
+    if (!item) {
+      return res.status(400).json({ error: true, message: "Item not found" });
+    }
+
+    if (isPinned) item.isPinned = isPinned || false;
+
+    await item.save();
+
+    return res.json({
+      error: false,
+      item,
+      message: "Item has been pinned",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: `Internal error ${error}`,
+    });
   }
 });
 

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/Home/Sidebar";
 import ItemCard from "../../components/Home/ItemCard/ItemCard";
 import bag from "../../components/Backdrop/Backdrop-images/bag.JPG";
 import ItemEditPopup from "../../components/Home/ItemCard/ItemEditPopup";
 import Modal from "react-modal";
 import { MdAdd } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../utils/axiosInstancs";
 
 export const Dashboard = () => {
   const [expanded, setExpanded] = useState(true);
@@ -13,6 +15,32 @@ export const Dashboard = () => {
     type: "add",
     data: null,
   });
+  const navigate = useNavigate();
+
+  //get user info
+  const [userInfo, setUserInfo]= useState(null)
+
+  const getUserInfo = async () => {
+    try{
+      const response = await axiosInstance.get("/get-user");
+      if (response.data && response.data.user){
+        setUserInfo(response.data.user)
+      }
+    }catch(error){
+      if(error.response.status == 401){
+        localStorage.clear();
+        navigate("/login");
+      }
+    }
+  }
+
+  useEffect(()=>{
+
+    getUserInfo();
+    return () => {
+
+    }
+  },[])
 
   const toggleSidebar = () => {
     setExpanded(!expanded);
@@ -20,7 +48,7 @@ export const Dashboard = () => {
 
   return (
     <>
-      <Sidebar expanded={expanded} toggleSidebar={toggleSidebar} />
+      <Sidebar expanded={expanded} toggleSidebar={toggleSidebar} userInfo={userInfo}/>
       <div
         className={`flex-grow p-4 transition-all duration-100 ${
           expanded ? "ml-64" : "ml-20"

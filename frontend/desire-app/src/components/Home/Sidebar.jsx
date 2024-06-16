@@ -5,11 +5,12 @@ import Profile from "./Sidebar-Elements/Profile";
 import List from "./List/List"
 import AddList from "./List/AddList";
 
-const Sidebar = ({ expanded, toggleSidebar }) => {
+const Sidebar = ({ expanded, toggleSidebar, userInfo}) => {
     
-  const navigate = useNavigate;
+  const navigate = useNavigate();
 
   const onLogout = () => {
+    localStorage.clear();
     navigate("/login");
   };
 
@@ -26,7 +27,7 @@ const Sidebar = ({ expanded, toggleSidebar }) => {
         <List expanded={expanded}/>
         <AddList expanded={expanded}/>
         <div className="border-t flex justify-center items-center p-4 space-x-3 mt-auto">
-          {expanded ? <Profile/>: null}
+          {expanded ? <Profile userInfo= {userInfo}/>: null}
           <button
             className="icon-button"
             onClick={onLogout}

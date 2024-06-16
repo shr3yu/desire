@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Backdrop from "../../components/Backdrop/Backdrop";
 import PasswordInput from "../../components/PasswordInput";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { validateEmail } from "../../utils/helper";
+import axiosInstance from "../../utils/axiosInstancs";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -10,10 +11,12 @@ const Register = () => {
   const [error, setError] = useState(null);
   const [name, setName] = useState("");
 
-  const handleSignup = (e) => {
-    e.preventDefault()
-    if(!name){
-      setError("Please enter your name.")
+  const navigate = useNavigate();
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    if (!name) {
+      setError("Please enter your name.");
       return;
     }
     if (!validateEmail(email)) {
@@ -27,6 +30,37 @@ const Register = () => {
     }
 
     setError("");
+
+    //SignUpAPI
+    try {
+      const response = await axiosInstance.post("/create-account", {
+        fullName: name,
+        email: email,
+        password: password,
+      });
+
+      //handle successful sign up response
+      if (response.data && response.data.error) {
+        setError(response.data.message);
+        return;
+      }
+
+      if (response.data && response.data.accessToken) {
+        localStorage.setItem("token", response.data.accessToken);
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      //handle login error
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setError(error.response.data.message);
+      } else {
+        setError("An unexpected error occured.");
+      }
+    }
   };
 
   return (
@@ -46,7 +80,9 @@ const Register = () => {
               onChange={(e) => {
                 setName(e.target.value);
               }}
-              onClick={()=> {setError("")}}
+              onClick={() => {
+                setError("");
+              }}
             />
             <input
               type="text"
@@ -56,21 +92,25 @@ const Register = () => {
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
-              onClick={()=> {setError("")}}
+              onClick={() => {
+                setError("");
+              }}
             />
             <PasswordInput
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
-              onClick={()=> {setError("")}}
+              onClick={() => {
+                setError("");
+              }}
             ></PasswordInput>
 
             <button type="submit" className="submit-button">
               Sign Up
             </button>
 
-            {error && <p className= "text-red-500 text-xs pb-1">{error}</p>}
+            {error && <p className="text-red-500 text-xs pb-1">{error}</p>}
 
             <p className="text-sm text-center mt-4">
               Have an account? {""}
