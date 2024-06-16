@@ -5,7 +5,7 @@ import Profile from "./Sidebar-Elements/Profile";
 import List from "./List/List";
 import AddList from "./List/AddList";
 
-const Sidebar = ({ expanded, toggleSidebar, userInfo, allLists }) => {
+const Sidebar = ({ expanded, toggleSidebar, onChange, userInfo, allLists, activeList }) => {
   const navigate = useNavigate();
 
   const onLogout = () => {
@@ -27,7 +27,7 @@ const Sidebar = ({ expanded, toggleSidebar, userInfo, allLists }) => {
           </button>
         </div>
 
-        <List expanded={expanded} allLists={allLists} />
+        <List expanded={expanded} allLists={allLists} onChange= {onChange} activeList={activeList} />
         <AddList expanded={expanded} />
         <div className="border-t flex justify-center items-center p-4 space-x-3 mt-auto">
           {expanded ? <Profile userInfo={userInfo} /> : null}

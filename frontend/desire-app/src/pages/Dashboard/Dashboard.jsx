@@ -48,9 +48,17 @@ export const Dashboard = () => {
     }
   };
 
+  //Keeping track of the selected/active list by id
+  const [selectedList, setSelectedList] = useState(null);
+
+  const changeSelectedList = (listId) => {
+    setSelectedList(listId);
+  };
+
   //Happens before rendering of the page
   useEffect(() => {
     getAllLists();
+    setSelectedList(allLists[0]?._id); // on inital load: first list is active
     getUserInfo();
     return () => {};
   }, []);
@@ -64,8 +72,10 @@ export const Dashboard = () => {
       <Sidebar
         expanded={expanded}
         toggleSidebar={toggleSidebar}
+        onChange={changeSelectedList}
         userInfo={userInfo}
         allLists={allLists}
+        activeList={selectedList}
       />
       <div
         className={`flex-grow p-4 transition-all duration-100 ${
