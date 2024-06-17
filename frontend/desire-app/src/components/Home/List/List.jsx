@@ -17,6 +17,7 @@ const List = ({ expanded, allLists, onChange, activeList, onDelete, getAllLists}
           onChange = {onChange}
           onDelete = {onDelete}
           getAllLists ={getAllLists}
+          
         />
       ))}
     </div>

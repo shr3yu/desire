@@ -56,7 +56,7 @@ const ListItem = ({
       onMouseEnter={() => setHoverState(true)}
       onMouseLeave={() => setHoverState(false)}
     >
-      {editState ? (
+      {editState && active? (
         <button
           className="flex items-center justify-center"
           onClick={handleSubmit}
@@ -67,7 +67,7 @@ const ListItem = ({
         <img src={icon} className="w-12 h-12 flex-shrink-0 rounded-lg" />
       )}
 
-      {editState && expanded ? (
+      {editState && active && expanded ? (
         <div className="flex pl-2 items-center relative">
           <div>
             <input
@@ -92,7 +92,7 @@ const ListItem = ({
         </div>
       ) : null}
 
-      {expanded && !editState ? (
+      {expanded && (!editState || !active) ? (
         <span className="w-52 ml-3">{name}</span>
       ) : null}
 

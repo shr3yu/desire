@@ -75,6 +75,10 @@ const ItemEditPopup = ({
     } else if (!amount) {
       setError("Please enter an amount");
       return;
+    } else if (isNaN(amount)) {
+      setError("Please enter a valid amount number");
+      console.log("error: is not a number");
+      return;
     }
 
     setError("");
@@ -136,7 +140,7 @@ const ItemEditPopup = ({
           {image == null ? (
             <MdCloudUpload className="text-gray-300 text-4xl" />
           ) : (
-            <img className="rounded-md"width={100} height={100} src={image} />
+            <img className="rounded-md" width={100} height={100} src={image} />
           )}
         </label>
       </div>

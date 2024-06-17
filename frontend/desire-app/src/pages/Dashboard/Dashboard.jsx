@@ -104,6 +104,13 @@ export const Dashboard = () => {
       console.log(`An unexpected error has occured: ${error}`);
     }
   };
+
+  //calculate total amount of list
+  const totalAmount = () => {
+    let total=0;
+    allActiveItems.forEach((item)=> total = Number(item.amount) + total)
+    return total;
+  }
   //Happens before rendering of the page
   useEffect(() => {
     const fetchData = async () => {
@@ -117,15 +124,15 @@ export const Dashboard = () => {
     fetchData();
   }, []);
 
+
   useEffect(() => {
     // This useEffect will run every time `selectedList` is updated
-    console.log('selectedList updated:', selectedList);
+    console.log("selectedList updated:", selectedList);
   }, [selectedList]);
 
   const toggleSidebar = () => {
     setExpanded(!expanded);
   };
-
 
   return (
     <>
@@ -145,9 +152,13 @@ export const Dashboard = () => {
         }`}
       >
         <div className="py-8 px-7">
-          <h1 className="text-4xl pd-30 tracking-tight">
-            {selectedList?.listName}
-          </h1>
+          <div className="flex items-center">
+            <h1 className="text-4xl pd-30 tracking-tight">
+              {selectedList?.listName}
+            </h1>
+            <h1 className="text-4xl p-2 pl-8 text-secondary">${totalAmount()}</h1>
+          </div>
+
           <div className="container mx-auto pt-10">
             {allActiveItems?.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
