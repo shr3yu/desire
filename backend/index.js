@@ -16,7 +16,8 @@ const app = express();
 const jwt = require("jsonwebtoken");
 const { authenticateToken } = require("./utilities");
 
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb" }));
 
 app.use(cors({ origin: "*" }));
 
@@ -200,6 +201,31 @@ app.get("/get-lists", authenticateToken, async (req, res) => {
     return res.json({
       error: true,
       message: `Internal error ${errors}`,
+    });
+  }
+});
+
+//get a single list
+app.get("/get-list/:listId", authenticateToken, async (req, res) => {
+  const listId = req.params.listId;
+  const { user } = req.user;
+
+  try {
+    const list = await List.findOne({ _id: listId, userId: user._id });
+
+    if (!list) {
+      return res.status(400).json({ error: true, message: "List not found" });
+    }
+
+    return res.json({
+      error: false,
+      list,
+      message: "List updates successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: true,
+      message: `internal error ${error}`,
     });
   }
 });

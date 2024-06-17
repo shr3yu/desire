@@ -3,6 +3,7 @@ import { VscDiffAdded } from "react-icons/vsc";
 import { ImCheckmark2 } from "react-icons/im";
 import { VscClose } from "react-icons/vsc";
 import axiosInstance from "../../../utils/axiosInstancs";
+import { capitalFirst } from "../../../utils/helper";
 
 const AddList = ({ expanded, allLists, setAllLists }) => {
   // text: if text input should be displayed or not
@@ -20,7 +21,7 @@ const AddList = ({ expanded, allLists, setAllLists }) => {
     //API call to add list
     try {
       const response = await axiosInstance.post("/add-list", {
-        listName: list,
+        listName: capitalFirst(list),
       });
 
       if (response.data && response.data.list) {

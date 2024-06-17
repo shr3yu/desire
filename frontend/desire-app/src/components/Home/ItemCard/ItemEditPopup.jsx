@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { VscClose } from "react-icons/vsc";
 import axiosInstance from "../../../utils/axiosInstancs";
 import { MdCloudUpload } from "react-icons/md";
+import { capitalFirst } from "../../../utils/helper";
 
 const ItemEditPopup = ({
   itemData,
@@ -20,7 +21,7 @@ const ItemEditPopup = ({
   const addNewItem = async (list) => {
     try {
       const response = await axiosInstance.post(`/add-item/${list._id}`, {
-        itemName: item,
+        itemName: capitalFirst(item),
         image: image,
         description: description,
         amount: amount,
@@ -46,7 +47,7 @@ const ItemEditPopup = ({
   const editItem = async () => {
     try {
       const response = await axiosInstance.put(`/edit-item/${itemData?._id}`, {
-        itemName: item,
+        itemName: capitalFirst(item),
         description: description,
         amount: amount,
       });

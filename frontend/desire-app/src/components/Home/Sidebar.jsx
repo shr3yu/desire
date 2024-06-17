@@ -14,7 +14,7 @@ const Sidebar = ({
   allLists,
   setAllLists,
   activeList,
-  changeSelectedList,
+  getAllLists,
 }) => {
   const navigate = useNavigate();
 
@@ -61,6 +61,7 @@ const Sidebar = ({
           onChange={onChange}
           activeList={activeList}
           onDelete={onDelete}
+          getAllLists= {getAllLists}
         />
         <AddList
           expanded={expanded}

@@ -7,6 +7,8 @@ import Modal from "react-modal";
 import { MdAdd } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstancs";
+import EmptyCard from "../../components/Home/ItemCard/EmptyCard";
+import imageReplace from "../../components/Home/List/List-icons/image.jpg";
 
 export const Dashboard = () => {
   const [expanded, setExpanded] = useState(true);
@@ -38,7 +40,7 @@ export const Dashboard = () => {
   const updatePinned = async (item) => {
     try {
       const response = await axiosInstance.put(`/pin-item/${item?._id}`, {
-        "isPinned": false,
+        isPinned: false,
       });
       getAllActiveItems(selectedList?._id);
     } catch (error) {
@@ -66,13 +68,13 @@ export const Dashboard = () => {
   //get all lists
   const [allLists, setAllLists] = useState([]);
 
-  const getAllLists = async () => {
+  const getAllLists = async (list) => {
     try {
       const response = await axiosInstance.get("/get-lists");
 
       if (response.data && response.data.lists) {
         setAllLists(response.data.lists);
-        setSelectedList(response.data.lists[0]); //inital active list is the first one recieved
+        setSelectedList(list || response.data.lists[0]); //inital active list is the first one recieved
         return response.data.lists;
       }
     } catch (error) {
@@ -102,7 +104,6 @@ export const Dashboard = () => {
       console.log(`An unexpected error has occured: ${error}`);
     }
   };
-
   //Happens before rendering of the page
   useEffect(() => {
     const fetchData = async () => {
@@ -113,13 +114,18 @@ export const Dashboard = () => {
       }
       getUserInfo();
     };
-
     fetchData();
   }, []);
+
+  useEffect(() => {
+    // This useEffect will run every time `selectedList` is updated
+    console.log('selectedList updated:', selectedList);
+  }, [selectedList]);
 
   const toggleSidebar = () => {
     setExpanded(!expanded);
   };
+
 
   return (
     <>
@@ -131,7 +137,7 @@ export const Dashboard = () => {
         allLists={allLists}
         setAllLists={setAllLists}
         activeList={selectedList}
-        changeSelectedList={changeSelectedList}
+        getAllLists={getAllLists}
       />
       <div
         className={`flex-grow p-4 transition-all duration-100 ${
@@ -143,21 +149,25 @@ export const Dashboard = () => {
             {selectedList?.listName}
           </h1>
           <div className="container mx-auto pt-10">
-            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {allActiveItems?.map((item) => (
-                <ItemCard
-                  key={item._id}
-                  itemName={item.itemName}
-                  image={item.image}
-                  description={item.description}
-                  amount={item.amount}
-                  isPinned={item.isPinned}
-                  onDelete={() => deleteItemCard(item)}
-                  onEdit={() => handleEdit(item)}
-                  onPinNote={() => updatePinned(item)}
-                />
-              ))}
-            </div>
+            {allActiveItems?.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {allActiveItems?.map((item) => (
+                  <ItemCard
+                    key={item._id}
+                    itemName={item.itemName}
+                    image={item.image == null ? imageReplace : item.image}
+                    description={item.description}
+                    amount={item.amount}
+                    isPinned={item.isPinned}
+                    onDelete={() => deleteItemCard(item)}
+                    onEdit={() => handleEdit(item)}
+                    onPinNote={() => updatePinned(item)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <EmptyCard />
+            )}
           </div>
 
           <button
