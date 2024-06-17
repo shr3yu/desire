@@ -271,7 +271,7 @@ All commands relating to Items
 //add item
 app.post("/add-item/:listId", authenticateToken, async (req, res) => {
   const listId = req.params.listId;
-  const { itemName, description, amount } = req.body;
+  const { itemName, image, description, amount } = req.body;
   const { user } = req.user;
 
   if (!itemName) {
@@ -302,6 +302,7 @@ app.post("/add-item/:listId", authenticateToken, async (req, res) => {
     //case3: valid input
     const item = new Item({
       itemName,
+      image,
       description,
       amount,
       listId: listId,
@@ -326,7 +327,7 @@ app.post("/add-item/:listId", authenticateToken, async (req, res) => {
 //edit item
 app.put("/edit-item/:itemId", authenticateToken, async (req, res) => {
   const itemId = req.params.itemId;
-  const { itemName, description, amount, isPinned } = req.body;
+  const { itemName, image, description, amount, isPinned } = req.body;
   const { user } = req.user;
 
   if (!itemName && !description && !amount) {
@@ -343,6 +344,7 @@ app.put("/edit-item/:itemId", authenticateToken, async (req, res) => {
     }
 
     if (itemName) item.itemName = itemName;
+    if (image) item.image = image;
     if (description) item.description = description;
     if (amount) item.amount = amount;
     if (isPinned) item.isPinned = isPinned;

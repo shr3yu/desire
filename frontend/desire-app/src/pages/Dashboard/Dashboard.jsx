@@ -148,7 +148,7 @@ export const Dashboard = () => {
                 <ItemCard
                   key={item._id}
                   itemName={item.itemName}
-                  image={bag}
+                  image={item.image}
                   description={item.description}
                   amount={item.amount}
                   isPinned={item.isPinned}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { VscClose } from "react-icons/vsc";
 import axiosInstance from "../../../utils/axiosInstancs";
+import { MdCloudUpload } from "react-icons/md";
 
 const ItemEditPopup = ({
   itemData,
@@ -20,6 +21,7 @@ const ItemEditPopup = ({
     try {
       const response = await axiosInstance.post(`/add-item/${list._id}`, {
         itemName: item,
+        image: image,
         description: description,
         amount: amount,
       });
@@ -83,6 +85,20 @@ const ItemEditPopup = ({
     }
   };
 
+  //Image section
+  const [image, setImage] = useState(null);
+  const convertToBase64 = (e) => {
+    let reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
+    reader.onload = () => {
+      console.log(reader.result);
+      setImage(reader.result);
+    };
+    reader.onerror = (error) => {
+      console.log(`Error: ${error}`);
+    };
+  };
+
   return (
     <div className="p-6 w-full bg-white rounded-lg shadow-md ">
       <button className="icon-button rounded-full flex absolute right-6">
@@ -100,6 +116,28 @@ const ItemEditPopup = ({
           value={item}
           onChange={({ target }) => setItem(target.value)}
         ></input>
+      </div>
+
+      <div className="flex flex-col py-2">
+        <label className="input-label"> IMAGE </label>
+        <input
+          id="file-input"
+          className="hidden"
+          accept="image/*"
+          type="file"
+          onChange={convertToBase64}
+        ></input>
+
+        <label
+          htmlFor="file-input"
+          className="cursor-pointer bg-slate-50 text-white flex justify-center items-center py-2 px-4 text-center"
+        >
+          {image == null ? (
+            <MdCloudUpload className="text-gray-300 text-4xl" />
+          ) : (
+            <img className="rounded-md"width={100} height={100} src={image} />
+          )}
+        </label>
       </div>
 
       <div className="flex flex-col py-2">

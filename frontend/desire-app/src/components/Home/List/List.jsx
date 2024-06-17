@@ -1,11 +1,7 @@
 import React from "react";
 import ListItem from "./ListItem";
 //ICON imports
-import clothes from "./List-icons/clothes.JPG";
-import giftbag from "./List-icons/giftbag.JPG";
-import love from "./List-icons/love.JPG";
-import makeup from "./List-icons/makeup.JPG";
-import travel from "./List-icons/travel.JPG";
+import stary from "./List-icons/Stary.JPG";
 
 const List = ({ expanded, allLists, onChange, activeList, onDelete}) => {
   return (
@@ -14,7 +10,7 @@ const List = ({ expanded, allLists, onChange, activeList, onDelete}) => {
         <ListItem
           key= {list?._id}
           list={list}
-          icon={clothes}
+          icon={stary}
           name={list.listName}
           expanded={expanded}
           active= {list?._id == activeList?._id}
