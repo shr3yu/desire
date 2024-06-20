@@ -15,6 +15,7 @@ const Sidebar = ({
   setAllLists,
   activeList,
   getAllLists,
+  handleUserEdit
 }) => {
   const navigate = useNavigate();
 
@@ -69,7 +70,7 @@ const Sidebar = ({
           setAllLists={setAllLists}
         />
         <div className="border-t flex justify-center items-center p-4 space-x-3 mt-auto">
-          {expanded ? <Profile userInfo={userInfo} /> : null}
+          {expanded ? <Profile userInfo={userInfo} handleUserEdit={handleUserEdit} /> : null}
           <button className="icon-button" onClick={onLogout}>
             <GoSignOut size={24} />
           </button>

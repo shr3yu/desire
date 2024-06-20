@@ -25,6 +25,10 @@ app.get("/", (req, res) => {
   res.json({ data: "hello" });
 });
 
+/*
+All commands relating to List 
+*/
+
 //create account
 app.post("/create-account", async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -129,6 +133,37 @@ app.get("/get-user", authenticateToken, async (req, res) => {
     },
     message: "",
   });
+});
+
+//edit user
+app.put("/edit-user", authenticateToken, async (req, res) => {
+  const { user } = req.user;
+  const { fullName, email, password } = req.body;
+  
+  try {
+    const seconduser = await User.findById(user._id);
+    if (fullName) {
+      seconduser.fullName = fullName;
+    }
+    if (email) {
+      seconduser.email = email;
+    }
+    if (password) {
+      seconduser.password = password;
+    }
+
+    await seconduser.save();
+
+    return res.json({
+      error: false,
+      message: "User updated successfully",
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: true,
+      message: `internal error ${error}`,
+    });
+  }
 });
 
 //delete account

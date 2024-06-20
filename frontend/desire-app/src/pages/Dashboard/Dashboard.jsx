@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstancs";
 import EmptyCard from "../../components/Home/ItemCard/EmptyCard";
 import imageReplace from "../../components/Home/List/List-icons/image.jpg";
+import UserEditPopup from "../../components/Home/UserEditPopup";
 
 export const Dashboard = () => {
   const [expanded, setExpanded] = useState(true);
@@ -17,7 +18,20 @@ export const Dashboard = () => {
     type: "add",
     data: null,
   });
+
+  const [openUserPopupModal, setOpenUserModal] = useState({
+    isShown: false,
+    data: null,
+  });
   const navigate = useNavigate();
+
+  // On user edit
+  const handleUserEdit = () => {
+    //show the usepopup
+    console.log("hello");
+    setOpenUserModal({ isShown: true, data: userInfo });
+    console.log(openUserPopupModal);
+  };
 
   //to edit item card
   const handleEdit = (item) => {
@@ -107,10 +121,11 @@ export const Dashboard = () => {
 
   //calculate total amount of list
   const totalAmount = () => {
-    let total=0;
-    allActiveItems.forEach((item)=> total = Number(item.amount) + total)
+    let total = 0;
+    allActiveItems?.forEach((item) => (total = Number(item.amount) + total));
     return total;
-  }
+  };
+
   //Happens before rendering of the page
   useEffect(() => {
     const fetchData = async () => {
@@ -124,7 +139,6 @@ export const Dashboard = () => {
     fetchData();
   }, []);
 
-
   useEffect(() => {
     // This useEffect will run every time `selectedList` is updated
     console.log("selectedList updated:", selectedList);
@@ -135,7 +149,7 @@ export const Dashboard = () => {
   };
 
   return (
-    <>
+    <div>
       <Sidebar
         expanded={expanded}
         toggleSidebar={toggleSidebar}
@@ -145,6 +159,7 @@ export const Dashboard = () => {
         setAllLists={setAllLists}
         activeList={selectedList}
         getAllLists={getAllLists}
+        handleUserEdit={handleUserEdit}
       />
       <div
         className={`flex-grow p-4 transition-all duration-100 ${
@@ -156,7 +171,9 @@ export const Dashboard = () => {
             <h1 className="text-4xl pd-30 tracking-tight">
               {selectedList?.listName}
             </h1>
-            <h1 className="text-4xl p-2 pl-8 text-secondary">${totalAmount()}</h1>
+            <h1 className="text-4xl p-2 pl-8 text-secondary">
+              ${totalAmount()}
+            </h1>
           </div>
 
           <div className="container mx-auto pt-10">
@@ -190,6 +207,7 @@ export const Dashboard = () => {
             <MdAdd className="text-[32px] text-white" />
           </button>
 
+          {/* popup for item edit/add */}
           <Modal
             isOpen={openEditItemPopupModal.isShown}
             onRequestClose={() => {}}
@@ -229,8 +247,46 @@ export const Dashboard = () => {
               getAllActiveItems={getAllActiveItems}
             />
           </Modal>
+
+          {/* Popup for changing user information */}
+          <Modal
+            isOpen={openUserPopupModal.isShown}
+            onRequestClose={() => {}}
+            style={{
+              overlay: {
+                backgroundColor: "rgba(0, 0, 0, 0.2)",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              content: {
+                position: "relative",
+                inset: "auto",
+                width: "70%",
+                maxWidth: "500px",
+                height: "auto",
+                maxHeight: "80%",
+                background: "white",
+                overflow: "auto",
+                margin: "auto",
+              },
+            }}
+            contentLabel="Edit Item Modal"
+            className="w-screen max-w-3xl h-auto max-h-[50%] bg-white rounded-md overflow-auto mx-2 sm:mx-auto mt-0 sm:mt-14"
+          >
+            <UserEditPopup
+              userData={openUserPopupModal.data}
+              onClose={() =>
+                setOpenUserModal({
+                  isShown: false,
+                  data: null,
+                })
+              }
+              getUserInfo={getUserInfo}
+            />
+          </Modal>
         </div>
       </div>
-    </>
+    </div>
   );
 };
