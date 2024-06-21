@@ -1,10 +1,10 @@
 require("dotenv").config();
-
+const path = require("path");
 const config = require("./config.json");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
-mongoose.connect(config.connectionString);
+mongoose.connect(process.env.MONGO);
 
 const User = require("./models/user.model");
 const Item = require("./models/item.model");
@@ -22,8 +22,10 @@ app.use(express.urlencoded({ limit: "50mb" }));
 
 app.use(cors({ origin: "*" }));
 
-app.get("/", (req, res) => {
-  res.json({ data: "hello" });
+const _dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "frontend/build")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/frontend/build/index.html"));
 });
 
 /*
