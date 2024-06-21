@@ -4,6 +4,3 @@ node_modules/
 # Ignore environment variable files
 .env
 
-# Ignore build output
-build/
-dist/
