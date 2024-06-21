@@ -198,14 +198,20 @@ export const Dashboard = () => {
             )}
           </div>
 
-          <button
-            className="w-16 h-16 flex items-center justify-center rounded-full bg-primary hover:bg-secondary fixed right-10 bottom-10"
-            onClick={() => {
-              setOpenEditItemModal({ isShown: true, type: "add", data: null });
-            }}
-          >
-            <MdAdd className="text-[32px] text-white" />
-          </button>
+          {selectedList ? (
+            <button
+              className="w-16 h-16 flex items-center justify-center rounded-full bg-primary hover:bg-secondary fixed right-10 bottom-10"
+              onClick={() => {
+                setOpenEditItemModal({
+                  isShown: true,
+                  type: "add",
+                  data: null,
+                });
+              }}
+            >
+              <MdAdd className="text-[32px] text-white" />
+            </button>
+          ) : null}
 
           {/* popup for item edit/add */}
           <Modal
