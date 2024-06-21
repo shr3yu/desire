@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const config = require("./config.json");
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 mongoose.connect(config.connectionString);
 
@@ -57,11 +58,12 @@ app.post("/create-account", async (req, res) => {
       message: "User already exist",
     });
   }
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = new User({
     fullName,
     email,
-    password,
+    password: hashedPassword,
   });
 
   await user.save();
@@ -95,7 +97,9 @@ app.post("/login", async (req, res) => {
     return res.status(400).json({ message: "User not found" });
   }
 
-  if (userInfo.email == email && userInfo.password == password) {
+  const passwordMatch = await bcrypt.compare(password, userInfo.password);
+
+  if (userInfo.email == email && passwordMatch) {
     const user = { user: userInfo };
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: "36000m",
@@ -139,7 +143,7 @@ app.get("/get-user", authenticateToken, async (req, res) => {
 app.put("/edit-user", authenticateToken, async (req, res) => {
   const { user } = req.user;
   const { fullName, email, password } = req.body;
-  
+
   try {
     const seconduser = await User.findById(user._id);
     if (fullName) {
