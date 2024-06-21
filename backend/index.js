@@ -177,6 +177,7 @@ app.delete("/delete-account", authenticateToken, async (req, res) => {
     //first delete all lists
     await List.deleteMany({ userId: user._id });
     await Item.deleteMany({ userId: user._id });
+    await User.deleteOne({ _id: user._id });
     return res.json({
       error: false,
       message: "User has been deleted, including any user data",
