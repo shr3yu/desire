@@ -15,7 +15,7 @@ const Sidebar = ({
   setAllLists,
   activeList,
   getAllLists,
-  handleUserEdit
+  handleUserEdit,
 }) => {
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ const Sidebar = ({
           prevLists.filter((item) => item._id !== list._id)
         );
         //set active list to be the first one
-        changeSelectedList(allLists[0]);
+        onChange(allLists[0]);
       }
     } catch (error) {
       console.log(`An unexpected error has occured: ${error}`);
@@ -62,7 +62,7 @@ const Sidebar = ({
           onChange={onChange}
           activeList={activeList}
           onDelete={onDelete}
-          getAllLists= {getAllLists}
+          getAllLists={getAllLists}
         />
         <AddList
           expanded={expanded}
@@ -70,7 +70,9 @@ const Sidebar = ({
           setAllLists={setAllLists}
         />
         <div className="border-t flex justify-center items-center p-4 space-x-3 mt-auto">
-          {expanded ? <Profile userInfo={userInfo} handleUserEdit={handleUserEdit} /> : null}
+          {expanded ? (
+            <Profile userInfo={userInfo} handleUserEdit={handleUserEdit} />
+          ) : null}
           <button className="icon-button" onClick={onLogout}>
             <GoSignOut size={24} />
           </button>

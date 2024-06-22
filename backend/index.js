@@ -24,12 +24,6 @@ app.use(cors({ origin: "*" }));
 
 const _dirname = path.resolve();
 
-app.use(express.static(path.join(__dirname, '..', 'frontend', 'desire-app', 'dist')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', 'frontend', 'desire-app', 'dist', 'index.html'));
-});
-
 /*
 All commands relating to List 
 */
@@ -519,6 +513,25 @@ app.put("/pin-item/:itemId", authenticateToken, async (req, res) => {
       message: `Internal error ${error}`,
     });
   }
+});
+
+// Serve static files from the React app
+app.use(
+  express.static(path.join(__dirname, "..", "frontend", "desire-app", "dist"))
+);
+
+// Catch-all route to serve index.html for all other requests
+app.get("*", (req, res) => {
+  res.sendFile(
+    path.resolve(
+      __dirname,
+      "..",
+      "frontend",
+      "desire-app",
+      "dist",
+      "index.html"
+    )
+  );
 });
 
 app.listen(8000);
