@@ -39,7 +39,7 @@ const Sidebar = ({
 
   const onLogout = () => {
     localStorage.clear();
-    navigate("/login");
+    navigate("/");
   };
 
   return (
