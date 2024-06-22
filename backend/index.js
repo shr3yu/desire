@@ -23,9 +23,11 @@ app.use(express.urlencoded({ limit: "50mb" }));
 app.use(cors({ origin: "*" }));
 
 const _dirname = path.resolve();
-app.use(express.static(path.join(__dirname, "../frontend/desire-app/dist")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "../frontend/desire-app/dist/index.html"));
+
+app.use(express.static(path.join(__dirname, '..', 'frontend', 'desire-app', 'dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '..', 'frontend', 'desire-app', 'dist', 'index.html'));
 });
 
 /*

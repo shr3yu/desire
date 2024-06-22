@@ -130,7 +130,7 @@ export const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       const lists = await getAllLists();
-      const firstListId = lists[0]?._id;
+      const firstListId = lists?.[0]?._id;
       if (firstListId) {
         await getAllActiveItems(firstListId);
       }
