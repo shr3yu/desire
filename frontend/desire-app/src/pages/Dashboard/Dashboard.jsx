@@ -54,7 +54,7 @@ export const Dashboard = () => {
   const updatePinned = async (item) => {
     try {
       const response = await axiosInstance.put(`/pin-item/${item?._id}`, {
-        isPinned: false,
+        isPinned: !item?.isPinned,
       });
       getAllActiveItems(selectedList?._id);
     } catch (error) {
