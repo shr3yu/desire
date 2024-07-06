@@ -36,8 +36,8 @@ With the access to various Artifical intelligence such as Chat GPT, I believe in
 
 ### Inital Wireframes and Mockups
 The inital steps of the project included skteching up a visison for the different pages of the application. This included how the login, signup, and dashboard would look like, and writing out the functionality of various components on these pages.
-See this at: 
+[See this](Wireframes&Mockups/Wireframes%20and%20mockup.pdf)
 
 ### Progession of ideas 
 As the development of the application progressed, several layout and functionality changes were made to enhance the user experience and improve performance. 
-See this at:
+[See this](Wireframes&Mockups/Brainstorm.pdf)
